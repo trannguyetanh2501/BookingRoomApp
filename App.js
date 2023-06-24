@@ -1,20 +1,47 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import {Button, View} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import Home from "./src/screen/Home";
+import Login from "./src/screen/Login";
+import Add from "./src/screen/CreateBooking";
+import {MD3LightTheme as DefaultTheme, PaperProvider} from 'react-native-paper';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+const theme = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        primary: 'tomato',
+        secondary: 'yellow',
+    },
+};
+
+const Stack = createStackNavigator();
+
+function MyStack() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                options={{ headerShown: false }}
+                name="Login" component={Login}/>
+            <Stack.Screen
+                options={{ headerShown: false }}
+                name="Home" component={Home}/>
+            <Stack.Screen name="Add"
+                          options={{ headerShown: false }}
+                          component={Add}/>
+
+
+        </Stack.Navigator>
+    );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+    return (
+        <PaperProvider theme={theme}>
+            <NavigationContainer>
+                <MyStack/>
+            </NavigationContainer>
+        </PaperProvider>
+    );
+}
