@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, View} from 'react-native';
+import {Button, StyleSheet, SafeAreaView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Home from "./src/screen/Home";
@@ -21,6 +21,9 @@ const Stack = createStackNavigator();
 function MyStack() {
     return (
         <Stack.Navigator>
+            <Stack.Screen name="Add"
+                          options={{ headerShown: true, title:"Thêm mới" }}
+                          component={Add}/>
             <Stack.Screen
                 options={{ headerShown: false }}
                 name="Home" component={Home}/>
@@ -28,9 +31,7 @@ function MyStack() {
                 options={{ headerShown: false }}
                 name="Login" component={Login}/>
 
-            <Stack.Screen name="Add"
-                          options={{ headerShown: false }}
-                          component={Add}/>
+
 
 
         </Stack.Navigator>
@@ -41,8 +42,15 @@ export default function App() {
     return (
         <PaperProvider theme={theme}>
             <NavigationContainer>
+                <SafeAreaView style={styles.container}>
                 <MyStack/>
+                </SafeAreaView>
             </NavigationContainer>
         </PaperProvider>
     );
 }
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+});

@@ -1,8 +1,11 @@
 import * as React from "react";
-import {Text, View, StyleSheet, Image, FlatList, StatusBar, SafeAreaView} from "react-native";
+import {Text, View, StyleSheet, Image, FlatList, SafeAreaView, TouchableOpacity} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {Card, Title, Button} from 'react-native-paper';
 import { Avatar, Paragraph } from 'react-native-paper';
+import {
+    Searchbar,
+} from 'react-native-paper';
 const LeftContentBooking = props => <Avatar.Icon style={{backgroundColor:'white'}} {...props} color={'#107c10'} icon="check" />
 const LeftContentUnBooking = props => <Avatar.Icon style={{backgroundColor:'white'}} {...props} color={'#d13438'} icon="close" />
 const Item = ({ title,subtitle,isBooking, image, cardContentTitle, cardContentParagraph  }) => (
@@ -19,7 +22,15 @@ const Item = ({ title,subtitle,isBooking, image, cardContentTitle, cardContentPa
         </Card.Actions>
     </Card>
 );
-
+// const AddButton = () => {
+//     return (
+//         <View style={styles.addButtonContainer}>
+//             <TouchableOpacity style={styles.addButton}>
+//                 <Text style={styles.buttonText}>Thêm mới</Text>
+//             </TouchableOpacity>
+//         </View>
+//     );
+// };
 const Home = () => {
     const data = [
         {id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh',cardContentParagraph:'Giáo viên Viện SPKT', isBooking: true },
@@ -33,7 +44,7 @@ const Home = () => {
         {id: 3, title: 'D9', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: true },
     ];
     const navigation = useNavigation()
-    return     <SafeAreaView style={styles.container}>
+    return     <View style={styles.root}>
         <View style={styles.header}>
             <View style={styles.item}>
                 <Image
@@ -44,10 +55,38 @@ const Home = () => {
                     }}
                 />
             </View>
-            <View style={styles.item}>
-                <Text style={styles.title}>Trần Nguyệt Ánh</Text>
-            </View>
+                <View style={styles.item}>
+                    <Text style={styles.title}>Trần Nguyệt Ánh</Text>
+                </View>
+
+
         </View>
+        <View style={styles.wrapInput}>
+            <View>
+                <Searchbar
+                    inputStyle={{
+                        fontWeight: '400',
+                        fontSize: 16,
+                        lineHeight: 22,
+                        color: '#6E6E6E',
+                    }}
+                    style={{
+                        color: '#6E6E6E',
+                        marginHorizontal: 12,
+                        backgroundColor: '#F1F1F1',
+                        borderRadius: 10,
+                        height: 50,
+                        fontWeight: '400',
+                        fontSize: 17,
+                        lineHeight: 22,
+                    }}
+                    placeholder="Nhập từ khóa tìm kiếm"
+                />
+            </View>
+
+        </View>
+
+
         <View style={styles.container}>
             <FlatList
                 data={data}
@@ -55,8 +94,11 @@ const Home = () => {
                 keyExtractor={(item) => item.id}
             />
         </View>
+            <View style={styles.addButton}>
+                <Text style={styles.buttonText}> Thêm mới </Text>
+            </View>
 
-    </SafeAreaView>
+    </View>
 }
 const styles = StyleSheet.create({
     root:{
@@ -71,6 +113,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     item: {},
+    wrapInput: {
+        width: '100%',
+        backgroundColor: '#FFFFFF',
+    },
     img: {
         borderRadius: 50,
         width: 32,
@@ -89,6 +135,19 @@ const styles = StyleSheet.create({
         paddingHorizontal:20,
         width: '100%',
             backgroundColor: '#FFFFFF',
+    },
+    addButton: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        backgroundColor: 'blue',
+        padding: 10,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
 });
 export default Home
