@@ -1,16 +1,39 @@
 import * as React from "react";
-import {Text, View, StyleSheet, Image} from "react-native";
+import {Text, View, StyleSheet, Image, FlatList, StatusBar, SafeAreaView} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {Card, Title, Button} from 'react-native-paper';
+import { Avatar, Paragraph } from 'react-native-paper';
+const LeftContentBooking = props => <Avatar.Icon style={{backgroundColor:'white'}} {...props} color={'#107c10'} icon="check" />
+const LeftContentUnBooking = props => <Avatar.Icon style={{backgroundColor:'white'}} {...props} color={'#d13438'} icon="close" />
+const Item = ({ title,subtitle,isBooking, image, cardContentTitle, cardContentParagraph  }) => (
+    <Card style={{marginBottom:24}}>
+        <Card.Title title={title} subtitle={subtitle} left={isBooking ? LeftContentBooking : LeftContentUnBooking} />
+        <Card.Content>
+            <Title>{`Người đặt: ${cardContentTitle}`}</Title>
+            <Paragraph>{`Chức vụ: ${cardContentParagraph ? cardContentParagraph : '' }`}</Paragraph>
+        </Card.Content>
+        <Card.Cover source={{ uri: image }} />
+        <Card.Actions>
+            <Button>Cancel</Button>
+            <Button>Ok</Button>
+        </Card.Actions>
+    </Card>
+);
 
 const Home = () => {
     const data = [
-        {id: 1, title: 'Thư viện', image: 'https://picsum.photos/700'},
-        {id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700'},
-        {id: 3, title: 'D9', image: 'https://picsum.photos/700'},
+        {id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh',cardContentParagraph:'Giáo viên Viện SPKT', isBooking: true },
+        {id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', cardContentParagraph:'Giáo viên Viện CNTT', isBooking: true },
+        {id: 3, title: 'D9', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: true },
+        {id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: false },
+        {id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: true },
+        {id: 3, title: 'D9', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: false },
+        {id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: true },
+        {id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: false },
+        {id: 3, title: 'D9', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: true },
     ];
     const navigation = useNavigation()
-    return <View style={styles.root}>
+    return     <SafeAreaView style={styles.container}>
         <View style={styles.header}>
             <View style={styles.item}>
                 <Image
@@ -26,28 +49,19 @@ const Home = () => {
             </View>
         </View>
         <View style={styles.container}>
-            {data.map(item => (
-                <Card key={item.id} style={{marginBottom:24}}>
-                    <Card.Cover source={{uri: item.image}}/>
-                    <Card.Content>
-                        <Title>{item.title}</Title>
-                    </Card.Content>
-                    <Card.Actions>
-                        <Button>Đặt lịch</Button>
-                    </Card.Actions>
-                </Card>
-            ))}
+            <FlatList
+                data={data}
+                renderItem={({ item }) => <Item title={item.title} subtitle={item.subtitle} cardContentParagraph={item.cardContentParagraph} cardContentTitle={item.cardContentTitle} image={item.image} isBooking={item.isBooking}/>}
+                keyExtractor={(item) => item.id}
+            />
         </View>
 
-    </View>
+    </SafeAreaView>
 }
 const styles = StyleSheet.create({
     root:{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            backgroundColor: '#FFFFFF',
+        flex: 1,
+        // marginTop: StatusBar.currentHeight || 0,
         },
     header: {
         width: '100%',
@@ -73,9 +87,8 @@ const styles = StyleSheet.create({
     container:{
         paddingVertical:20,
         paddingHorizontal:20,
-        marginTop: 24,
         width: '100%',
-        backgroundColor: '#FFFFFF',
+            backgroundColor: '#FFFFFF',
     },
 });
 export default Home
