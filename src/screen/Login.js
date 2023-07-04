@@ -1,8 +1,8 @@
 import * as React from "react";
-import {View, StyleSheet, Image, Dimensions, Alert} from "react-native";
+import { View, StyleSheet, Image, Dimensions, Alert } from "react-native";
 import { TextInput, Button } from 'react-native-paper';
-import {useNavigation} from "@react-navigation/native";
-import {useState} from 'react'
+import { useNavigation } from "@react-navigation/native";
+import { useState } from 'react'
 const width = Dimensions.get('screen').width;
 
 
@@ -12,17 +12,26 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-        Alert.alert(`Xin chào ${username}`)
+        Alert.alert(`Xin chào ${username}`);
+        AddUser()
         // Xử lý logic đăng nhập ở đây, ví dụ: gọi API, kiểm tra thông tin đăng nhập, ...
-   navigation.navigate('Home')
+        navigation.navigate('Home')
     };
-
+    const AddUser = async () => {
+        const serverUrl = 'localhost:3000'
+        const params = new URLSearchParams({
+            username: username, passs: password
+        });
+        const res = await fetch(`http://${serverUrl}/api/add?` + params)
+        const data = await res.json()
+        console.log('data', data)
+    }
 
     return <View style={styles.container}>
 
-            <Image source={{uri:'https://static.mass.spsvn.com/images/app/sign-in.png'}}
-                   style={{width: 200, height: 200, resizeMode: 'contain', marginBottom:24}}
-            />
+        <Image source={{ uri: 'https://static.mass.spsvn.com/images/app/sign-in.png' }}
+            style={{ width: 200, height: 200, resizeMode: 'contain', marginBottom: 24 }}
+        />
         <TextInput
             style={styles.input}
             placeholder="Username"
@@ -37,7 +46,7 @@ const Login = () => {
             value={password}
             right={<TextInput.Icon icon="eye" />}
         />
-        <Button mode="contained"  style={{backgroundColor:'#107c10'}} onPress={handleLogin}>
+        <Button mode="contained" style={{ backgroundColor: '#107c10' }} onPress={handleLogin}>
             Login
         </Button>
     </View>
@@ -51,9 +60,9 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        marginBottom:24,
+        marginBottom: 24,
         paddingHorizontal: '20%',
-        borderRadius:8
+        borderRadius: 8
     },
 });
 export default Login

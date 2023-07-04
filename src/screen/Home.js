@@ -1,19 +1,19 @@
 import * as React from "react";
-import {Text, View, StyleSheet, Image, FlatList, SafeAreaView, TouchableOpacity} from "react-native";
-import {useNavigation} from "@react-navigation/native";
-import {Card, Title, Button} from 'react-native-paper';
+import { Text, View, StyleSheet, Image, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Card, Title, Button } from 'react-native-paper';
 import { Avatar, Paragraph } from 'react-native-paper';
 import {
     Searchbar,
 } from 'react-native-paper';
-const LeftContentBooking = props => <Avatar.Icon style={{backgroundColor:'white'}} {...props} color={'#107c10'} icon="check" />
-const LeftContentUnBooking = props => <Avatar.Icon style={{backgroundColor:'white'}} {...props} color={'#d13438'} icon="close" />
-const Item = ({ title,subtitle,isBooking, image, cardContentTitle, cardContentParagraph  }) => (
-    <Card style={{marginBottom:24}}>
+const LeftContentBooking = props => <Avatar.Icon style={{ backgroundColor: 'white' }} {...props} color={'#107c10'} icon="check" />
+const LeftContentUnBooking = props => <Avatar.Icon style={{ backgroundColor: 'white' }} {...props} color={'#d13438'} icon="close" />
+const Item = ({ title, subtitle, isBooking, image, cardContentTitle, cardContentParagraph }) => (
+    <Card style={{ marginBottom: 24 }}>
         <Card.Title title={title} subtitle={subtitle} left={isBooking ? LeftContentBooking : LeftContentUnBooking} />
         <Card.Content>
             <Title>{`Người đặt: ${cardContentTitle}`}</Title>
-            <Paragraph>{`Chức vụ: ${cardContentParagraph ? cardContentParagraph : '' }`}</Paragraph>
+            <Paragraph>{`Chức vụ: ${cardContentParagraph ? cardContentParagraph : ''}`}</Paragraph>
         </Card.Content>
         <Card.Cover source={{ uri: image }} />
         <Card.Actions>
@@ -33,18 +33,27 @@ const Item = ({ title,subtitle,isBooking, image, cardContentTitle, cardContentPa
 // };
 const Home = () => {
     const data = [
-        {id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh',cardContentParagraph:'Giáo viên Viện SPKT', isBooking: true },
-        {id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', cardContentParagraph:'Giáo viên Viện CNTT', isBooking: true },
-        {id: 3, title: 'D9', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: true },
-        {id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: false },
-        {id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: true },
-        {id: 3, title: 'D9', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: false },
-        {id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: true },
-        {id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: false },
-        {id: 3, title: 'D9', image: 'https://picsum.photos/700',  subtitle:'Lịch học đã được đặt',cardContentTitle:'Trần Nguyệt Ánh', isBooking: true },
+        { id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', cardContentParagraph: 'Giáo viên Viện SPKT', isBooking: true },
+        { id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', cardContentParagraph: 'Giáo viên Viện CNTT', isBooking: true },
+        { id: 3, title: 'D9', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: true },
+        { id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: false },
+        { id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: true },
+        { id: 3, title: 'D9', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: false },
+        { id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: true },
+        { id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: false },
+        { id: 3, title: 'D9', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: true },
     ];
     const navigation = useNavigation()
-    return     <View style={styles.root}>
+    const fetchApi = async () => {
+        const serverUrl = 'localhost:3000/api/rooms/list'
+        const res = await fetch(`http://${serverUrl}`)
+        const data = await res.json()
+        console.log('data', data)
+    }
+    React.useEffect(() => {
+        fetchApi()
+    }, [])
+    return <View style={styles.root}>
         <View style={styles.header}>
             <View style={styles.item}>
                 <Image
@@ -55,9 +64,9 @@ const Home = () => {
                     }}
                 />
             </View>
-                <View style={styles.item}>
-                    <Text style={styles.title}>Trần Nguyệt Ánh</Text>
-                </View>
+            <View style={styles.item}>
+                <Text style={styles.title}>Trần Nguyệt Ánh</Text>
+            </View>
 
 
         </View>
@@ -90,21 +99,21 @@ const Home = () => {
         <View style={styles.container}>
             <FlatList
                 data={data}
-                renderItem={({ item }) => <Item title={item.title} subtitle={item.subtitle} cardContentParagraph={item.cardContentParagraph} cardContentTitle={item.cardContentTitle} image={item.image} isBooking={item.isBooking}/>}
+                renderItem={({ item }) => <Item title={item.title} subtitle={item.subtitle} cardContentParagraph={item.cardContentParagraph} cardContentTitle={item.cardContentTitle} image={item.image} isBooking={item.isBooking} />}
                 keyExtractor={(item) => item.id}
             />
         </View>
-            <View style={styles.addButton}>
-                <Text style={styles.buttonText}> Thêm mới </Text>
-            </View>
+        <View style={styles.addButton}>
+            <Text style={styles.buttonText}> Thêm mới </Text>
+        </View>
 
     </View>
 }
 const styles = StyleSheet.create({
-    root:{
+    root: {
         flex: 1,
         // marginTop: StatusBar.currentHeight || 0,
-        },
+    },
     header: {
         width: '100%',
         flexDirection: 'row',
@@ -130,11 +139,11 @@ const styles = StyleSheet.create({
         color: '#212121',
         fontWeight: 'bold',
     },
-    container:{
-        paddingVertical:20,
-        paddingHorizontal:20,
+    container: {
+        paddingVertical: 20,
+        paddingHorizontal: 20,
         width: '100%',
-            backgroundColor: '#FFFFFF',
+        backgroundColor: '#FFFFFF',
     },
     addButton: {
         position: 'absolute',
