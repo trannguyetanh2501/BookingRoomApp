@@ -3,10 +3,9 @@ import { useState } from "react";
 import { Text, View, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-
 const Add = () => {
+
     const dataRoom = [
         { id: 1, name: 'Thư viện Tạ Quang Bửu' },
         { id: 2, name: 'Nhà D35' },
@@ -69,6 +68,7 @@ const Add = () => {
 
                 </Picker>
             </View>
+
             <View style={{ width: '100%', paddingHorizontal: 20, paddingVertical: 12, height: 100 }}>
                 <Text style={styles.text}> Thời gian bắt đầu họp trong ngày {currentDate} </Text>
                 <TextInput

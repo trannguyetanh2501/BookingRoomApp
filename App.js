@@ -23,13 +23,14 @@ function MyStack() {
         <Stack.Navigator>
             <Stack.Screen
                 options={{ headerShown: false }}
+                name="Login" component={Login} />
+            <Stack.Screen
+                options={{ headerShown: false }}
                 name="Home" component={Home} />
             <Stack.Screen name="Add"
                 options={{ headerShown: true, title: "Thêm mới" }}
                 component={Add} />
-            <Stack.Screen
-                options={{ headerShown: false }}
-                name="Login" component={Login} />
+
 
 
 
