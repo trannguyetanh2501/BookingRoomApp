@@ -1,58 +1,105 @@
 import * as React from "react";
-import { Text, View, StyleSheet, Image, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Card, Title, Button } from 'react-native-paper';
-import { Avatar, Paragraph } from 'react-native-paper';
+import {View, StyleSheet, Image, FlatList, SafeAreaView, TouchableOpacity} from "react-native";
+import {useNavigation} from "@react-navigation/native";
+import {Card, Text, Button} from 'react-native-paper';
+import {Avatar, Paragraph} from 'react-native-paper';
 import {
     Searchbar,
 } from 'react-native-paper';
-const LeftContentBooking = props => <Avatar.Icon style={{ backgroundColor: 'white' }} {...props} color={'#107c10'} icon="check" />
-const LeftContentUnBooking = props => <Avatar.Icon style={{ backgroundColor: 'white' }} {...props} color={'#d13438'} icon="close" />
-const Item = ({ title, subtitle, isBooking, image, cardContentTitle, cardContentParagraph }) => (
-    <Card style={{ marginBottom: 24 }}>
-        <Card.Title title={title} subtitle={subtitle} left={isBooking ? LeftContentBooking : LeftContentUnBooking} />
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useState} from "react";
+
+const LeftContentBooking = props => <Avatar.Icon style={{backgroundColor: 'white'}} {...props} color={'#107c10'}
+                                                 icon="check"/>
+const LeftContentUnBooking = props => <Avatar.Icon style={{backgroundColor: 'white'}} {...props} color={'#d13438'}
+                                                   icon="close"/>
+const Item = ({title, subtitle, isBooking, navigation}) => (
+
+    <Card style={{marginBottom: 24}}  onPress={()=> navigation.navigate('Detail')}>
+        <Card.Title title={title} subtitle={subtitle} left={isBooking ? LeftContentBooking : LeftContentUnBooking}/>
         <Card.Content>
-            <Title>{`Người đặt: ${cardContentTitle}`}</Title>
-            <Paragraph>{`Chức vụ: ${cardContentParagraph ? cardContentParagraph : ''}`}</Paragraph>
+            <View style={{
+                width: '100%',
+                flexDirection: 'row',
+                alignItems: 'center',
+                padding: 12,
+                backgroundColor: '#c5cbfa',
+                borderRadius: 8,
+                display: 'flex'
+            }}>
+                <View>
+                    <Text theme={{colors: {primary: '#fff'}}} variant="titleMedium">Người đặt phòng: </Text>
+                </View>
+
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                    <Image
+                        style={styles.img}
+                        source={{
+                            uri:
+                                'https://placekitten.com/200/200',
+                        }}
+                    />
+
+
+                    <Text>Trần Nguyệt Ánh</Text>
+                </View>
+
+
+            </View>
         </Card.Content>
-        <Card.Cover source={{ uri: image }} />
-        <Card.Actions>
-            <Button>Cancel</Button>
-            <Button>Ok</Button>
-        </Card.Actions>
     </Card>
 );
-// const AddButton = () => {
-//     return (
-//         <View style={styles.addButtonContainer}>
-//             <TouchableOpacity style={styles.addButton}>
-//                 <Text style={styles.buttonText}>Thêm mới</Text>
-//             </TouchableOpacity>
-//         </View>
-//     );
-// };
+
 const Home = () => {
     const data = [
-        { id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', cardContentParagraph: 'Giáo viên Viện SPKT', isBooking: true },
-        { id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', cardContentParagraph: 'Giáo viên Viện CNTT', isBooking: true },
-        { id: 3, title: 'D9', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: true },
-        { id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: false },
-        { id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: true },
-        { id: 3, title: 'D9', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: false },
-        { id: 1, title: 'Thư viện', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: true },
-        { id: 2, title: 'Nhà D35', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: false },
-        { id: 3, title: 'D9', image: 'https://picsum.photos/700', subtitle: 'Lịch học đã được đặt', cardContentTitle: 'Trần Nguyệt Ánh', isBooking: true },
+        {
+            id: 1,
+            title: 'Thư viện',
+            image: 'https://picsum.photos/700',
+            subtitle: '11:20 -13:45',
+            cardContentTitle: 'Trần Nguyệt Ánh',
+            cardContentParagraph: 'Giáo viên Viện SPKT',
+            isBooking: true
+        },
+        {
+            id: 2,
+            title: 'Nhà D35',
+            image: 'https://picsum.photos/700',
+            subtitle: '11:20 -13:45',
+            cardContentTitle: 'Trần Nguyệt Ánh',
+            cardContentParagraph: 'Giáo viên Viện CNTT',
+            isBooking: true
+        },
+        {
+            id: 3,
+            title: 'D9',
+            image: 'https://picsum.photos/700',
+            subtitle: '11:20 -13:45',
+            cardContentTitle: 'Trần Nguyệt Ánh',
+            isBooking: true
+        },
     ];
-    const navigation = useNavigation()
+    const navigation = useNavigation();
+    const [username, setUsername] = useState('')
     const fetchApi = async () => {
-        const serverUrl = 'localhost:3000/api/rooms/list'
+        const serverUrl = 'localhost:3000/api/bookings/list'
         const res = await fetch(`http://${serverUrl}`)
         const data = await res.json()
         console.log('data', data)
     }
     React.useEffect(() => {
+        checkLogin()
         fetchApi()
     }, [])
+    const checkLogin = async () => {
+        let username = await AsyncStorage.getItem("username");
+        if (!username) {
+            navigation.navigate('Login')
+        } else {
+            setUsername(username)
+        }
+    }
+
     return <View style={styles.root}>
         <View style={styles.header}>
             <View style={styles.item}>
@@ -65,7 +112,7 @@ const Home = () => {
                 />
             </View>
             <View style={styles.item}>
-                <Text style={styles.title}>Trần Nguyệt Ánh</Text>
+                <Text style={styles.title}>{username}</Text>
             </View>
 
 
@@ -92,6 +139,12 @@ const Home = () => {
                     placeholder="Nhập từ khóa tìm kiếm"
                 />
             </View>
+            <View>
+
+                <Button mode="contained" buttonColor='#5b5fc7' onPress={() => navigation.navigate('Add')}>
+                    Thêm mới
+                </Button>
+            </View>
 
         </View>
 
@@ -99,13 +152,16 @@ const Home = () => {
         <View style={styles.container}>
             <FlatList
                 data={data}
-                renderItem={({ item }) => <Item title={item.title} subtitle={item.subtitle} cardContentParagraph={item.cardContentParagraph} cardContentTitle={item.cardContentTitle} image={item.image} isBooking={item.isBooking} />}
+                renderItem={({item}) => <Item title={item.title} subtitle={item.subtitle}
+                                              cardContentParagraph={item.cardContentParagraph}
+                                              cardContentTitle={item.cardContentTitle} image={item.image}
+                                              isBooking={item.isBooking}
+                                              navigation={navigation}
+                />}
                 keyExtractor={(item) => item.id}
             />
         </View>
-        <View style={styles.addButton}>
-            <Text style={styles.buttonText}> Thêm mới </Text>
-        </View>
+
 
     </View>
 }
@@ -123,8 +179,10 @@ const styles = StyleSheet.create({
     },
     item: {},
     wrapInput: {
+        display: "flex",
         width: '100%',
         backgroundColor: '#FFFFFF',
+        flexDirection: 'row'
     },
     img: {
         borderRadius: 50,
@@ -143,12 +201,13 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 20,
         width: '100%',
+        height: '100%',
         backgroundColor: '#FFFFFF',
     },
     addButton: {
         position: 'absolute',
-        bottom: 20,
-        right: 20,
+        bottom: 0,
+        right: 0,
         backgroundColor: 'blue',
         padding: 10,
         borderRadius: 5,
