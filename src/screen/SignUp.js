@@ -39,12 +39,12 @@ const Login = () => {
         ).then(async res => {
             if (res[0] === 200) {
 
-                if (JSON.parse(res[1].success)) {
-                    setMessage(JSON.parse(res[1].notice))
+                if ((res[1].success)== false) {
+                    setMessage(res[1].notice)
                     setLoading(false)
                 } else {
                     setLoading(false)
-                    setMessage(JSON.parse(res[1].notice))
+                    setMessage(res[1].notice)
                     setTimeout(() => {
                         navigation.navigate('Login')
                     }, 500)
