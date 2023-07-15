@@ -219,7 +219,7 @@ const Home = () => {
                     placeholder="Nhập từ khóa tìm kiếm"
                 />
             </View>
-            <View>
+            <View style={{ marginRight:12}}>
 
                 <Button mode="contained" buttonColor='#5b5fc7' onPress={() => navigation.navigate('Add')}>
                     Thêm mới
