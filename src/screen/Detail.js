@@ -79,25 +79,22 @@ const Detail: React.FC = () => {
         return data && data.data.name
 
     }
-    const convertToTime = (isoString) => {
+    const convertToISOString = (isoString) => {
         const date = new Date(isoString);
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const year = date.getUTCFullYear();
+        return `${day}/${month}/${year}`;
+    }
 
-        const absoluteHours = Math.abs(hours);
-        const formattedHours = absoluteHours < 10 ? '0' + absoluteHours : absoluteHours;
-        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-
-        return   formattedHours + ':' + formattedMinutes;
-    };
 
     const processData = async (arr) => {
         const item = {
             id: arr._id,
             title: await getNameRoom(arr.room),
             people: await getUsername(arr.createBy),
-            startTime: convertToTime(arr.startTime),
-            endTime: convertToTime(arr.endTime),
+            startTime: convertToISOString(arr.startTime),
+            endTime: convertToISOString(arr.endTime),
         };
 
         setData(item)

@@ -53,7 +53,8 @@ const Add = () => {
         const data = await res.json()
         console.log('data', data)
         setTimeout(async () => {
-            if (data.success == false) {
+            console.log('data',data.success)
+            if (data.success == 'false') {
                 setLoading(false)
                 setMessage(data.notice);
 
@@ -72,28 +73,12 @@ const Add = () => {
         const data = await res.json()
         setListRoom(data.data)
     }
-    const convertToISOString = (hours) => {
-        const currentDate = new Date(); // Lấy ngày hiện tại
-        const [currentYear, currentMonth, currentDay] = [
-            currentDate.getFullYear(),
-            currentDate.getMonth() + 1,
-            currentDate.getDate()
-        ];
-
-        const [hour, minute] = hours.split(':'); // Tách giờ và phút từ chuỗi
-
-        const convertedDate = new Date(
-            currentYear,
-            currentMonth - 1,
-            currentDay,
-            parseInt(hour),
-            parseInt(minute),
-            0
-        );
-
-        const isoString = convertedDate.toISOString(); // Chuyển đổi thành chuỗi ISO
-
-        return isoString;
+    const convertToISOString = (timeString) => {
+        const [hour, minute] = timeString.split(':');
+        const date = new Date();
+        date.setHours(parseInt(hour, 10));
+        date.setMinutes(parseInt(minute, 10));
+        return date.toISOString();
     };
 
     useEffect(() => {
