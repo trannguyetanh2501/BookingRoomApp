@@ -1,16 +1,21 @@
 import * as React from 'react';
 import {Text, Chip, DataTable, List} from 'react-native-paper';
 import {StyleSheet, View, Image, FlatList} from "react-native";
+import {useEffect, useState} from "react";
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const Detail: React.FC = () => {
+    const navigation = useNavigation();
+    const route = useRoute();
     const [expanded, setExpanded] = React.useState(true);
+    const [expanded2, setExpanded2] = React.useState(true);
     const [page, setPage] = React.useState(0);
     const [numberOfItemsPerPageList] = React.useState([2, 3, 4]);
     const [itemsPerPage, onItemsPerPageChange] = React.useState(
         numberOfItemsPerPageList[0]
     );
-
-    const [items] = React.useState([
+    const [data, setData] = useState({})
+    const [items] = useState([
         {
             key: 1,
             name: 'Điều hòa',
@@ -57,6 +62,70 @@ const Detail: React.FC = () => {
     const handleAccordionToggle = () => {
         setExpanded(!expanded);
     };
+    const handleAccordionToggle2 = () => {
+        setExpanded2(!expanded2);
+    };
+    const getUsername = async (id) => {
+        const serverUrl = 'localhost:3000/api/users/getId'
+        const res = await fetch(`http://${serverUrl}/${id}`)
+        const data = await res.json();
+        return data.data.username
+    }
+    const getNameRoom = async (id) => {
+
+        const serverUrl = 'localhost:3000/api/rooms/get'
+        const res = await fetch(`http://${serverUrl}/${id}`)
+        const data = await res.json();
+        return data && data.data.name
+
+    }
+    const convertToTime = (isoString) => {
+        const date = new Date(isoString);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+
+        let sign = '+';
+        if (hours < 0 || (hours === 0 && minutes < 0)) {
+            sign = '-';
+        }
+
+        const absoluteHours = Math.abs(hours);
+        const formattedHours = absoluteHours < 10 ? '0' + absoluteHours : absoluteHours;
+        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+        return sign + formattedHours + ':' + formattedMinutes;
+    };
+
+    const processData = async (arr) => {
+        const item = {
+            id: arr._id,
+            title: await getNameRoom(arr.room),
+            people: await getUsername(arr.createBy),
+            startTime: convertToTime(arr.startTime),
+            endTime: convertToTime(arr.endTime),
+        };
+
+        setData(item)
+
+    }
+    const fetchApi = async (id) => {
+        const serverUrl = 'localhost:3000/api/bookings/get'
+        const res = await fetch(`http://${serverUrl}/${id}`)
+        const data = await res.json();
+        console.log('data', data)
+        await processData(data.data)
+
+    }
+    useEffect(() => {
+        const {id, name} = route.params;
+        if (id) {
+            navigation.setOptions({
+                title: name,
+            });
+            fetchApi(id);
+        }
+
+    }, [])
     return <View style={styles.container}>
         <View>
             <Text variant="displaySmall">Quyết định thành lập trường SPKT</Text>
@@ -76,7 +145,7 @@ const Detail: React.FC = () => {
                     />
                 </View>
                 <View style={styles.item}>
-                    <Text style={styles.title}>Trần Nguyệt Ánh</Text>
+                    <Text style={styles.title}>{data && data.people ? data.people : 'Trần Nguyệt Ánh'}</Text>
                 </View>
             </View>
             <List.Section title="Thông tin chung">
@@ -86,10 +155,12 @@ const Detail: React.FC = () => {
                     titleStyle={{color: '#5b5fc7'}}
                     title="Thời gian đặt phòng"
                     left={() => <List.Icon color={'#5b5fc7'} style={{marginLeft: 8}} icon="calendar"/>}>
-                    <List.Item title="Thời gian họp: 14:00" />
-                    <List.Item title="Thời gian kết thúc: 15:00" />
+                    <List.Item title={data && data.startTime ? data.startTime : ' 14:00'}/>
+                    <List.Item title={data && data.endTime ? data.endTime : ' 15:00'}/>
                 </List.Accordion>
                 <List.Accordion
+                    expanded={expanded2}
+                    onPress={handleAccordionToggle2}
                     titleStyle={{color: '#5b5fc7'}}
                     title="Cơ sở vật chất"
                     left={() => <List.Icon color={'#5b5fc7'} style={{marginLeft: 8}} icon="equal"/>}>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {View, StyleSheet, Image,Text } from "react-native";
+import {View, StyleSheet, Image, Text} from "react-native";
 import {TextInput, Button, ActivityIndicator} from 'react-native-paper';
 import {useNavigation} from "@react-navigation/native";
 import {useState} from 'react'
@@ -24,14 +24,14 @@ const Login = () => {
     const Login = async () => {
 
         const serverUrl = 'localhost:3000'
-   await fetch(`http://${serverUrl}/api/users/get/`+ email).then(async (res) => {
+        await fetch(`http://${serverUrl}/api/users/get/` + email).then(async (res) => {
                 const statusCode = res.status;
                 const data = res.json();
                 return Promise.all([statusCode, data]);
             }
         ).then(async res => {
             if (res[0] === 200) {
-                console.log('res[1]',res[1])
+                console.log('res[1]', res[1])
                 console.log('type', typeof (res[1]))
                 if (res[1].success == false) {
                     setMessage(res[1].error)
@@ -43,7 +43,7 @@ const Login = () => {
                     console.log('res[1].error', res[1].user);
                     await AsyncStorage.setItem("username", (res[1]).user.username);
                     await AsyncStorage.setItem("_id", (res[1]).user._id);
-                    navigation.navigate('Home')
+                    navigation.navigate('Home', {name: res[1].user.username})
                 }
             }
         })
@@ -80,7 +80,8 @@ const Login = () => {
         <Button mode="contained" style={{backgroundColor: '#107c10'}} onPress={handleLogin}>
             Login
         </Button>
-        <Button mode="contained" style={{backgroundColor: '#2886de', marginTop: 12, marginBottom:24}} onPress={handleSignUp}>
+        <Button mode="contained" style={{backgroundColor: '#2886de', marginTop: 12, marginBottom: 24}}
+                onPress={handleSignUp}>
             Sign up
         </Button>
     </View>
