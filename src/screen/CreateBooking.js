@@ -1,20 +1,20 @@
 import * as React from "react";
-import {useEffect, useState} from "react";
-import {Text, View, Button, StyleSheet, TouchableOpacity} from "react-native";
-import {useNavigation} from "@react-navigation/native";
-import {ActivityIndicator, TextInput} from 'react-native-paper';
-import {Picker} from '@react-native-picker/picker';
+import { useEffect, useState } from "react";
+import { Text, View, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { ActivityIndicator, TextInput } from 'react-native-paper';
+import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Add = () => {
-    const navigation  = useNavigation();
+    const navigation = useNavigation();
 
     const [listRoom, setListRoom] = useState([
-        {id: 1, name: 'Thư viện Tạ Quang Bửu'},
-        {id: 2, name: 'Nhà D35'},
-        {id: 3, name: 'Tầng 9'},
-        {id: 4, name: 'Thư viện Tạ Quang Bửu'},
-        {id: 5, name: 'Thư viện Tạ Quang Bửu'},
+        { id: 1, name: 'Thư viện Tạ Quang Bửu' },
+        { id: 2, name: 'Nhà D35' },
+        { id: 3, name: 'Tầng 9' },
+        { id: 4, name: 'Thư viện Tạ Quang Bửu' },
+        { id: 5, name: 'Thư viện Tạ Quang Bửu' },
     ])
     const [selectedValue, setSelectedValue] = useState(1);
     const [selected, setSelected] = useState(1);
@@ -53,7 +53,7 @@ const Add = () => {
         const data = await res.json()
         console.log('data', data)
         setTimeout(async () => {
-            console.log('data',data.success)
+            console.log('data', data.success)
             if (data.success == 'false') {
                 setLoading(false)
                 setMessage(data.notice);
@@ -78,23 +78,38 @@ const Add = () => {
         const date = new Date();
         date.setHours(parseInt(hour, 10));
         date.setMinutes(parseInt(minute, 10));
-        return date.toISOString();
+        // return date.toISOString();
+        var tzo = -date.getTimezoneOffset(),
+            dif = tzo >= 0 ? '+' : '-',
+            pad = function (num) {
+                return (num < 10 ? '0' : '') + num;
+            };
+
+        const retDate = date.getFullYear() +
+            '-' + pad(date.getMonth() + 1) +
+            '-' + pad(date.getDate()) +
+            'T' + pad(date.getHours()) +
+            ':' + pad(date.getMinutes()) +
+            ':' + "00" +
+            "Z"
+
+        return retDate
     };
 
     useEffect(() => {
         getListRoom()
     }, [])
 
-    return <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <View style={{flex: 5, width: '100%'}}>
-            {loading && <ActivityIndicator animating={true} color={'#aab1fa'} style={{marginBottom: 24}}/>
+    return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flex: 5, width: '100%' }}>
+            {loading && <ActivityIndicator animating={true} color={'#aab1fa'} style={{ marginBottom: 24 }} />
             }
             <Text> {message}</Text>
-            <View style={{width: '100%', paddingHorizontal: 20, paddingVertical: 12, height: 100}}>
+            <View style={{ width: '100%', paddingHorizontal: 20, paddingVertical: 12, height: 100 }}>
                 <Text style={styles.text}>Địa điểm họp</Text>
                 <Picker
                     selectedValue={selectedValue}
-                    style={{height: 50, width: '100%'}}
+                    style={{ height: 50, width: '100%' }}
                     onValueChange={(itemValue, itemIndex) => {
                         setSelectedValue(itemValue)
                         setSelected(listRoom[itemIndex]._id)
@@ -102,14 +117,14 @@ const Add = () => {
                 >
                     {
                         listRoom.map((item, index) => (
-                            <Picker.Item label={item.name} value={item.id}/>
+                            <Picker.Item label={item.name} value={item.id} />
                         ))
                     }
 
                 </Picker>
             </View>
 
-            <View style={{width: '100%', paddingHorizontal: 20, paddingVertical: 12, height: 100}}>
+            <View style={{ width: '100%', paddingHorizontal: 20, paddingVertical: 12, height: 100 }}>
                 <Text style={styles.text}> Thời gian bắt đầu họp trong ngày {currentDate} </Text>
                 <TextInput
                     value={timeStart}
@@ -118,7 +133,7 @@ const Add = () => {
                 />
 
             </View>
-            <View style={{width: '100%', paddingHorizontal: 20, paddingVertical: 12, height: 100}}>
+            <View style={{ width: '100%', paddingHorizontal: 20, paddingVertical: 12, height: 100 }}>
                 <Text style={styles.text}> Thời gian kết thúc họp trong ngày {currentDate} </Text>
                 <TextInput
                     value={timeEnd}
