@@ -95,16 +95,11 @@ const Home = () => {
         const hours = date.getHours();
         const minutes = date.getMinutes();
 
-        let sign = '+';
-        if (hours < 0 || (hours === 0 && minutes < 0)) {
-            sign = '-';
-        }
-
         const absoluteHours = Math.abs(hours);
         const formattedHours = absoluteHours < 10 ? '0' + absoluteHours : absoluteHours;
         const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
 
-        return sign + formattedHours + ':' + formattedMinutes;
+        return   formattedHours + ':' + formattedMinutes;
     };
 
     const processData = async (arr) => {

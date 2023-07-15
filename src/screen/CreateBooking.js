@@ -93,10 +93,7 @@ const Add = () => {
 
         const isoString = convertedDate.toISOString(); // Chuyển đổi thành chuỗi ISO
 
-        // Cắt bỏ chữ "Z" ở cuối chuỗi
-        const isoStringWithoutZ = isoString.slice(0, -1); // Hoặc isoString.substring(0, isoString.length - 1)
-
-        return isoStringWithoutZ;
+        return isoString;
     };
 
     useEffect(() => {
