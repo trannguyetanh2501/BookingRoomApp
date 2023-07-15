@@ -2,11 +2,12 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {Text, View, Button, StyleSheet, TouchableOpacity} from "react-native";
 import {useNavigation} from "@react-navigation/native";
-import {TextInput} from 'react-native-paper';
+import {ActivityIndicator, TextInput} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Add = () => {
+    const navigation  = useNavigation();
 
     const [listRoom, setListRoom] = useState([
         {id: 1, name: 'Thư viện Tạ Quang Bửu'},
@@ -16,6 +17,8 @@ const Add = () => {
         {id: 5, name: 'Thư viện Tạ Quang Bửu'},
     ])
     const [selectedValue, setSelectedValue] = useState(1);
+    const [selected, setSelected] = useState(1);
+
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
     const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -25,25 +28,43 @@ const Add = () => {
     const [title, setTitle] = useState('');
     const [timeStart, setTimeStart] = useState('');
     const [timeEnd, setTimeEnd] = useState('');
+    const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false)
 
     const handleTextChange = (inputText) => {
         setDescription(inputText);
     };
     const createBooking = async () => {
+        setLoading(true)
+
+
         const serverUrl = 'localhost:3000';
         const userID = await AsyncStorage.getItem("_id");
         const requestOptions = {
             method: 'POST',
             body: new URLSearchParams({
                 createBy: userID,
-                room: selectedValue,
+                room: selected,
                 startTime: convertToISOString(timeStart),
                 endTime: convertToISOString(timeEnd),
             })
         };
-        const res = await fetch(`http://${serverUrl}/api/bookings/create`, requestOptions)
+        const res = await fetch(`http://${serverUrl}/api/bookings/create/`, requestOptions)
         const data = await res.json()
         console.log('data', data)
+        setTimeout(async () => {
+            if (data.success == false) {
+                setLoading(false)
+                setMessage(data.notice);
+
+            } else {
+                setLoading(false)
+                setMessage(data.notice);
+                navigation.navigate('Home')
+            }
+        }, 500)
+
+
     }
     const getListRoom = async () => {
         const serverUrl = 'localhost:3000'
@@ -82,20 +103,24 @@ const Add = () => {
         getListRoom()
     }, [])
 
-    const navigation = useNavigation()
     return <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <View style={{flex: 5, width: '100%'}}>
+            {loading && <ActivityIndicator animating={true} color={'#aab1fa'} style={{marginBottom: 24}}/>
+            }
+            <Text> {message}</Text>
             <View style={{width: '100%', paddingHorizontal: 20, paddingVertical: 12, height: 100}}>
                 <Text style={styles.text}>Địa điểm họp</Text>
                 <Picker
                     selectedValue={selectedValue}
                     style={{height: 50, width: '100%'}}
-                    onValueChange={(itemValue, itemIndex) =>{ setSelectedValue(listRoom[itemIndex]._id)
+                    onValueChange={(itemValue, itemIndex) => {
+                        setSelectedValue(itemValue)
+                        setSelected(listRoom[itemIndex]._id)
                     }}
                 >
                     {
                         listRoom.map((item, index) => (
-                            <Picker.Item label={item.name} value={item.id} />
+                            <Picker.Item label={item.name} value={item.id}/>
                         ))
                     }
 
@@ -121,17 +146,17 @@ const Add = () => {
 
 
             </View>
-            <View style={{width: '100%', paddingHorizontal: 20, paddingVertical: 12, height: 100}}>
-                <Text style={styles.text}> Tóm tắt nội dung cuộc họp ( nếu có) </Text>
-                <TextInput
-                    style={styles.textInput}
-                    multiline
-                    numberOfLines={4}
-                    value={description}
-                    onChangeText={handleTextChange}
-                    placeholder="Nhập nội dung"
-                />
-            </View>
+            {/*<View style={{width: '100%', paddingHorizontal: 20, paddingVertical: 12, height: 100}}>*/}
+            {/*    <Text style={styles.text}> Tóm tắt nội dung cuộc họp ( nếu có) </Text>*/}
+            {/*    <TextInput*/}
+            {/*        style={styles.textInput}*/}
+            {/*        multiline*/}
+            {/*        numberOfLines={4}*/}
+            {/*        value={description}*/}
+            {/*        onChangeText={handleTextChange}*/}
+            {/*        placeholder="Nhập nội dung"*/}
+            {/*    />*/}
+            {/*</View>*/}
 
             <View style={styles.add}>
                 <TouchableOpacity style={styles.button} onPress={createBooking}>

@@ -6,7 +6,7 @@ import {
 } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState, useEffect} from "react";
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const LeftContentBooking = props => <Avatar.Icon style={{backgroundColor: 'white'}} {...props} color={'#107c10'} icon="check"/>
 const LeftContentUnBooking = props => <Avatar.Icon style={{backgroundColor: 'white'}} {...props} color={'#d13438'} icon="close"/>
@@ -47,7 +47,6 @@ const Item = ({title, subtitle, isBooking, navigation, id, people}) => (
 
 const Home = () => {
     const navigation = useNavigation();
-    const route = useRoute();
     const [username, setUsername] = useState('');
     const [visible, setVisible] = React.useState(false);
     const hideDialog = () => setVisible(false);
@@ -147,10 +146,6 @@ const Home = () => {
         }
     }
     useEffect(() => {
-        // const {name} = route.params;
-        // if(name){
-        //     setUsername(name)
-        // }
         checkLogin();
         fetchApi()
     }, [])
